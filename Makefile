@@ -22,8 +22,9 @@ DIR_INC = Include
 DIR_SRC = Sources
 DIR_OBJ = Objects
 
-SRCS = 	ft_inspect.c \
-        ft_list_dir.c \
+SRCS = 	ls_fillinfo.c \
+        ls_list_dir.c \
+        ls_listinsert.c \
         main.c
 
 OBJS = $(addprefix $(DIR_OBJ)/,$(SRCS:.c=.o))
