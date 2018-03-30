@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                          LE - /            */
 /*                                                              /             */
-/*   test.c                                           .::    .:/ .      .::   */
+/*   main.c                                           .::    .:/ .      .::   */
 /*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: ythollet <marvin@le-101.fr>                +:+   +:    +:    +:+     */
+/*   By: ythollet <ythollet@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
-/*   Created: 2018/03/21 23:42:32 by ythollet     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/21 23:42:34 by ythollet    ###    #+. /#+    ###.fr     */
+/*   Created: 2018/03/29 12:29:04 by ythollet     #+#   ##    ##    #+#       */
+/*   Updated: 2018/03/29 12:29:04 by ythollet    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -45,66 +45,11 @@ t_lsfields	ls_parse(char *av)
 	return (arg);
 }
 
-
-char	*ft_strjoin_multiple(int n, ...)
-{
-	va_list	ap;
-	char	*tmp;
-	char	*cpy;
-	char	*full;
-
-	full = ft_strdup("");
-	va_start(ap, n);
-	while (n--)
-	{
-		tmp = va_arg(ap, char *);
-		if (!tmp)
-			break ;
-		cpy = full;
-		full = ft_strjoin(cpy, tmp);
-		free(cpy);
-	}
-	va_end(ap);
-	return (full);
-}
-
-//Rempli la liste chainé {**list} avec le(s) element(s) du nom de {*elmt}
-void	ls_getinfo(t_lsfields opts, char *elmt, t_lslist **list)
-{
-	t_lselem	*file_info;
-	DIR* 		rep;
-	t_dirent	*files;
-	char 		*file_path;
-
-	if (opendir(elmt) == 0) // si fichier
-	{
-		file_info = ls_fillinfo(elmt);
-		ls_insert(opts, list, file_info);
-	}
-	else if ((rep = opendir(elmt)))
-	{
-		while ((files = readdir(rep)) != NULL)
-		{
-			printf("file %s\n", files->d_name);
-			if (!(!(opts.a) && files->d_name[0] == '.'))
-			{
-				printf("ICI\n");
-				//file_path = ft_strcat_free()
-				file_info = ls_fillinfo(files->d_name);
-				printf("La\n");
-				printf("file name %s\n", file_info->name);
-				ls_insert(opts, list, file_info);
-			}
-		}
-		closedir(rep);
-	}
-	//printf("<%p>\n", elmt);
-}
-
 int 		main(int ac, char **av)
 {
-	t_lsfields opts = {0};
-	t_lslist *list;
+	t_lsfields	opts = {0};
+	t_lslist	*list_file;
+	t_lslist	*list_fldr;
 
 	av++;
 	if (ac > 1 && av[0][0] == '-')
@@ -112,17 +57,26 @@ int 		main(int ac, char **av)
 		opts = ls_parse(av[0]);
 		av++;
 	}
-	if (!(list = malloc(sizeof(t_lslist))))
-		exit(EXIT_FAILURE);
-	list->first = NULL;
-	list->last = NULL;
+	list_file = ls_initlist();
+	list_fldr = ls_initlist();
 	if (*av == 0)
-		ls_getinfo(opts, ".", &list);
+		ls_getinfo(&opts, ".", &list_file, &list_fldr);
 	else
 	{
 		while (*av)
-			ls_getinfo(opts, *av++, &list);
+			ls_getinfo(&opts, *av++, &list_file, &list_fldr);
 	}
+	printf("test\n");
+	if (list_file->first)
+		ls_print(opts, *list_file, 0);
+	if (list_fldr->first)
+		ls_print(opts, *list_fldr, 1);
+	printf("*******************\n");
+	//ls_printview(opts, *list_file, 0);
+	printf("*******************\n");
+	//ls_printview(opts, *list_fldr, 0);
+	printf("*******************\n");
+
 	printf("FIN\n");
 
     return (1);

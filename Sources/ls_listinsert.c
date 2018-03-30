@@ -13,21 +13,21 @@
 
 #include "../Include/ft_ls.h"
 
-int 	ls_cmp(t_lsfields opts, t_lselem *elem1, t_lselem *elem2)
+int 	ls_cmp(t_lsfields *opts, t_lselem *elem1, t_lselem *elem2)
 {
 	char *tmp1;
 	char *tmp2;
 
-	if (opts.t && elem1->time < elem2->time)
+	if (opts->t && elem1->time > elem2->time)
 		return (1);
-	else if (ft_strcmp(elem1->name, elem2->name) >= 0)
+	else if (ft_strcmp(elem1->name, elem2->name) <= 0)
 		return (1);
 	else
 		return (0);
 }
 
 
-void	ls_insert(t_lsfields opts, t_lslist **list, t_lselem *elem)
+void	ls_insert(t_lsfields *opts, t_lslist **list, t_lselem *elem)
 {
 	t_lselem *t_prev;
 	t_lselem *t_next;
@@ -48,5 +48,5 @@ void	ls_insert(t_lsfields opts, t_lslist **list, t_lselem *elem)
 	if (!elem->prev)
 		(*list)->first = elem;
 	if (!elem->next)
-		(*list)->first = elem;
+		(*list)->last = elem;
 }

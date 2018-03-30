@@ -25,6 +25,9 @@ DIR_OBJ = Objects
 SRCS = 	ls_fillinfo.c \
         ls_list_dir.c \
         ls_listinsert.c \
+        ls_getinfo.c \
+        ls_print.c \
+        ls_tool.c \
         main.c
 
 OBJS = $(addprefix $(DIR_OBJ)/,$(SRCS:.c=.o))
