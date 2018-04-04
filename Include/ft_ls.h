@@ -76,8 +76,8 @@ void			ls_insert(t_lselem *elem, t_lslist **list, t_lsfields *opts);
 void			ls_getinfo(t_lsfields *opts, char *elmt, t_lslist **list_file, t_lslist **list_fldr);
 void			ls_readdir(t_lsfields opts, char *name, t_lslist **list_file);
 void			ls_print(t_lsfields opts, t_lslist *list_elem, BOOL fldr);
-void			ls_revlist(t_lslist **list);
 t_lsprint		ls_columns(t_lsfields opts, t_lslist *list_elem);
+void			ls_revlist(t_lslist **list);
 
 
 // TOOLS

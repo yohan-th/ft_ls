@@ -30,7 +30,7 @@ int			ls_lenclmn(t_lslist *list_elem)
 	elem = list_elem->first;
 	while (elem)
 	{
-		if (ft_strlen(elem->name) > len)
+		if (ft_strlen(elem->name) > (len - 7))
 			len = ft_strlen(elem->name) + 7;
 		elem = elem->next;
 	}
@@ -41,6 +41,7 @@ int			ls_lenclmn(t_lslist *list_elem)
 ** {less_empty} correspond à l'espace libre après avoir rempli
 ** {len_files} dans {len_array} + marge droite, on le compare pour identifier
 ** les dimensions parfaites du tableau.
+** {len_array} = nb_clmn * w_clmn * nb_line
 */
 
 void		ls_calcclmn(t_lsprint *print)
@@ -52,13 +53,12 @@ void		ls_calcclmn(t_lsprint *print)
 	int nb_line_tmp;
 
 	nb_clmn_max = print->w_term / print->w_clmn;
-	len_array = print->nb_clmn * print->w_clmn * 1;
 	less_empty = print->w_term * print->nb_file;
 	while (nb_clmn_max > 0)
 	{
 		nb_line_tmp = 1;
 		len_files = print->w_clmn * print->nb_file;
-		len_array = print->nb_clmn * print->w_clmn * 1;
+		len_array = nb_clmn_max * print->w_clmn * 1;
 		while (len_files > len_array)
 			len_array = nb_clmn_max * print->w_clmn * ++nb_line_tmp;
 		if (((print->w_term * nb_line_tmp) - len_files) < less_empty)

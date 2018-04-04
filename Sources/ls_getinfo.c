@@ -40,7 +40,6 @@ void	ls_readdir(t_lsfields opts, char *name, t_lslist **list_file)
 	rep = opendir(name);
 	while ((files = readdir(rep)) != NULL)
 	{
-		//printf("test file %s\n", files->d_name);
 		if (!(!(opts.a) && files->d_name[0] == '.'))
 		{
 			file_path = ft_strjoin_mltp(3, name, "/", files->d_name);

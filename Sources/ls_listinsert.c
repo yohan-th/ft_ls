@@ -13,28 +13,27 @@
 
 #include "../Include/ft_ls.h"
 
+/*
+** On inverse uniquement le pointeur du suivant avec le precedent
+** ainsi que le pointeur vers le premier avec le dernier
+*/
 
 void	ls_revlist(t_lslist **list)
 {
-	t_lselem	*t_swap;
 	t_lselem	*t_next;
 	t_lselem	*tmp;
 
 	t_next = (*list)->first;
-	t_swap = (*list)->last;
-	tmp = NULL;
-	while ((tmp == NULL) || (t_next->pos_clmn != tmp->pos_clmn))
+	while (t_next)
 	{
-		tmp = t_next;
-		t_next = t_swap;
-		if (t_next->next == NULL)
-			(*list)->last = t_next;
-		t_swap = tmp;
-		if (t_swap->prev == NULL)
-			(*list)->first = t_swap;
-		t_next = tmp->next;
-		t_swap = t_next->prev;
+		tmp = t_next->next;
+		t_next->next = t_next->prev;
+		t_next->prev = tmp;
+		t_next = t_next->prev;
 	}
+	tmp = (*list)->first;
+	(*list)->first = (*list)->last;
+	(*list)->last = tmp;
 }
 
 int 	ls_cmp(t_lsfields *opts, t_lselem *elem1, t_lselem *elem2)
@@ -49,7 +48,6 @@ int 	ls_cmp(t_lsfields *opts, t_lselem *elem1, t_lselem *elem2)
 	else
 		return (0);
 }
-
 
 void	ls_insert(t_lselem *elem, t_lslist **list, t_lsfields *opts)
 {

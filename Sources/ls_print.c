@@ -42,32 +42,40 @@ void	ls_printclmn(t_lsfields opts, t_lslist *list_elem, t_lsprint print)
 	}
 }
 
+void	ls_fldr(t_lsfields opts, t_lslist *list_elem)
+{
+	t_lslist	*list_file;
+	t_lselem	*elem;
+
+	elem = list_elem->first;
+	while (elem)
+	{
+		if (opts.nb_folders > 1)
+			ft_printf("%s:\n", elem->name);
+		list_file = ls_initlist();
+		ls_readdir(opts, elem->name, &list_file);
+		if (opts.r_lwr && list_file->first)
+			ls_revlist(&list_file);
+		ls_print(opts, list_file, 0);
+		elem = elem->next;
+	}
+}
+
 void	ls_print(t_lsfields opts, t_lslist *list_elem, BOOL fldr)
 {
-	t_lselem	*elem;
 	t_lsprint	print;
-	t_lslist	*list_file;
 
 	if (opts.r_lwr)
 		ls_revlist(&list_elem);
 	if (fldr)
-	{
-		elem = list_elem->first;
-		while (elem)
-		{
-			ft_printf("%s:\n", elem->name);
-			list_file = ls_initlist();
-			ls_readdir(opts, elem->name, &list_file);
-			if (opts.r_lwr && list_file->first)
-				ls_revlist(&list_file);
-			ls_print(opts, list_file, 0);
-			elem = elem->next;
-		}
-	}
+		ls_fldr(opts, list_elem);
 	else
 	{
 		print = ls_columns(opts, list_elem);
 		ls_printclmn(opts, list_elem, print);
 		printf("\n");
 	}
+
+	//else
+
 }
