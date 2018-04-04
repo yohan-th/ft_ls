@@ -13,63 +13,61 @@
 
 #include "../Include/ft_ls.h"
 
-void	ls_printview(t_lsfields opts, t_lslist lst, BOOL foldr)
+void	ls_printclmn(t_lsfields opts, t_lslist *list_elem, t_lsprint print)
 {
-	t_lselem *pelem;
-	t_lslist *list_file;
+	t_lselem	*elem;
+	int 		file;
+	BOOL		found;
 
-	pelem = lst.first;
-	while (pelem)
+	file = 1;
+	while (file <= (print.nb_clmn * print.nb_line))
 	{
-		if (!foldr)
-			ft_printf("%s\n", ls_onlyfile(pelem->name));
-		if (foldr && opts.nb_folders > 1)
-			ft_printf("%s:\n", pelem->name);
-		if (foldr)
-		{
-			//printf("folder %s\n", pelem->name);
-			list_file = ls_initlist();
-			ls_readdir(opts, pelem->name, &list_file);
-			ls_print(opts, *list_file, 0);
-		}
-		if (foldr)
-			ft_printf("\n");
-		pelem = pelem->next;
-	}
-}
-
-void	ls_printview_r(t_lslist lst, BOOL foldr)
-{
-	t_lselem *pelem;
-
-	pelem = lst.last;
-	while (pelem)
-	{
-		ft_printf("%s\n", pelem->name);
-		pelem = pelem->prev;
-	}
-}
-
-void	ls_print(t_lsfields opts, t_lslist list_elem, BOOL foldr)
-{
-	t_lselem *elem;
-
-	if (!opts.r_lwr)
-	{
-		elem = list_elem.first;
+		found = 0;
+		elem = list_elem->first;
 		while (elem)
 		{
-			ls_printview(opts, list_elem, foldr);
+			if (elem->pos_clmn == file)
+			{
+				ft_printf("%s", elem->name);
+				ft_putchar_dup(' ', elem->sp_clmn);
+				found = 1;
+			}
+			elem = elem->next;
+		}
+		if (!found)
+			ft_putchar_dup(' ', print.w_clmn);
+		if (file % print.nb_clmn == 0)
+			ft_printf("\n");
+		file++;
+	}
+}
+
+void	ls_print(t_lsfields opts, t_lslist *list_elem, BOOL fldr)
+{
+	t_lselem	*elem;
+	t_lsprint	print;
+	t_lslist	*list_file;
+
+	if (opts.r_lwr)
+		ls_revlist(&list_elem);
+	if (fldr)
+	{
+		elem = list_elem->first;
+		while (elem)
+		{
+			ft_printf("%s:\n", elem->name);
+			list_file = ls_initlist();
+			ls_readdir(opts, elem->name, &list_file);
+			if (opts.r_lwr && list_file->first)
+				ls_revlist(&list_file);
+			ls_print(opts, list_file, 0);
 			elem = elem->next;
 		}
 	}
 	else
 	{
-		elem = list_elem.last;
-		while (elem)
-		{
-			ls_printview(opts, list_elem, foldr);
-			elem = elem->prev;
-		}
+		print = ls_columns(opts, list_elem);
+		ls_printclmn(opts, list_elem, print);
+		printf("\n");
 	}
 }

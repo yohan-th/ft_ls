@@ -13,12 +13,21 @@
 
 #include "../Include/ft_ls.h"
 
-char 		*ls_onlyfile(char *str)
+/*
+** ls_removepath : le while prend un compte le dernier '/' en fin de path
+** et le conserve. Ex ~/path/de/mon/fichier/ --> fichier/
+*/
+
+char 		*ls_removepath(char *str)
 {
-	if (!ft_strchr(str, '/'))
+	if (!ft_strchr(str, '/') && (ft_strchr(str, '/') + 1) == '\0')
 		return (str);
 	else
-		return (ft_strchr(str, '/') + 1);
+	{
+		while (ft_strchr(str, '/') != NULL && ft_strlen(ft_strchr(str, '/')) != 1)
+			str = ft_strchr(str, '/') + 1;
+		return (str);
+	}
 }
 
 t_lslist	*ls_initlist(void)
@@ -32,4 +41,29 @@ t_lslist	*ls_initlist(void)
 	return (list);
 }
 
+void		ls_viewlist(t_lslist *list)
+{
+	t_lselem	*elem;
 
+	elem = list->first;
+	while (elem)
+	{
+		printf("%s\n", elem->name);
+		elem = elem->next;
+	}
+}
+
+int 		ls_lenlist(t_lslist *list)
+{
+	t_lselem	*elem;
+	int 		nb_elem;
+
+	nb_elem = 0;
+	elem = list->first;
+	while (elem)
+	{
+		nb_elem += 1;
+		elem = elem->next;
+	}
+	return (nb_elem);
+}

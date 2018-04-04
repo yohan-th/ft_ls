@@ -18,7 +18,7 @@ void	ls_listfile(char *name, t_lslist **list_file, t_lsfields *opts)
 	t_lselem	*file_info;
 
 	file_info = ls_fillinfo(name);
-	ls_insert(opts, list_file, file_info);
+	ls_insert(file_info, list_file, opts);
 }
 
 void	ls_listfolder(char *name, t_lslist **list_fldr, t_lsfields *opts)
@@ -27,7 +27,7 @@ void	ls_listfolder(char *name, t_lslist **list_fldr, t_lsfields *opts)
 
 	opts->nb_folders += 1;
 	fldr_info = ls_fillinfo(name);
-	ls_insert(opts, list_fldr, fldr_info);
+	ls_insert(fldr_info, list_fldr, opts);
 }
 
 void	ls_readdir(t_lsfields opts, char *name, t_lslist **list_file)
@@ -40,11 +40,12 @@ void	ls_readdir(t_lsfields opts, char *name, t_lslist **list_file)
 	rep = opendir(name);
 	while ((files = readdir(rep)) != NULL)
 	{
+		//printf("test file %s\n", files->d_name);
 		if (!(!(opts.a) && files->d_name[0] == '.'))
 		{
 			file_path = ft_strjoin_mltp(3, name, "/", files->d_name);
 			file_info = ls_fillinfo(file_path);
-			ls_insert(&opts, list_file, file_info);
+			ls_insert(file_info, list_file, &opts);
 		}
 	}
 	closedir(rep);

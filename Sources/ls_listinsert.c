@@ -13,6 +13,30 @@
 
 #include "../Include/ft_ls.h"
 
+
+void	ls_revlist(t_lslist **list)
+{
+	t_lselem	*t_swap;
+	t_lselem	*t_next;
+	t_lselem	*tmp;
+
+	t_next = (*list)->first;
+	t_swap = (*list)->last;
+	tmp = NULL;
+	while ((tmp == NULL) || (t_next->pos_clmn != tmp->pos_clmn))
+	{
+		tmp = t_next;
+		t_next = t_swap;
+		if (t_next->next == NULL)
+			(*list)->last = t_next;
+		t_swap = tmp;
+		if (t_swap->prev == NULL)
+			(*list)->first = t_swap;
+		t_next = tmp->next;
+		t_swap = t_next->prev;
+	}
+}
+
 int 	ls_cmp(t_lsfields *opts, t_lselem *elem1, t_lselem *elem2)
 {
 	char *tmp1;
@@ -27,11 +51,12 @@ int 	ls_cmp(t_lsfields *opts, t_lselem *elem1, t_lselem *elem2)
 }
 
 
-void	ls_insert(t_lsfields *opts, t_lslist **list, t_lselem *elem)
+void	ls_insert(t_lselem *elem, t_lslist **list, t_lsfields *opts)
 {
 	t_lselem *t_prev;
 	t_lselem *t_next;
 
+	//printf("new elem %s\n", elem->name);
 	t_prev = NULL;
 	t_next = (*list)->first;
 	while (t_next && ls_cmp(opts, t_next, elem))

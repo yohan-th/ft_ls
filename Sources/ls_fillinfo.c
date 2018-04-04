@@ -56,9 +56,10 @@ t_lselem	*ls_fillinfo(char *elmt)
 	t_lselem	*infos;
 	char		*tmp;
 
+	//("elem %s\n", elmt);
 	if (!(infos = malloc(sizeof(t_lselem))) || (stat(elmt, &s)) == -1)
 		exit(EXIT_FAILURE);
-		infos->name = ls_onlyfile(elmt);
+	infos->name = ls_removepath(elmt);
 	/*
 	ft_printf("Type:\t\t%s\n", ft_def_elmt(s.st_mode));
 	ft_printf("Modes:\t\t%s\n", (tmp = ft_def_right(s)));
@@ -71,6 +72,6 @@ t_lselem	*ls_fillinfo(char *elmt)
 	ft_printf("Group:\t\t%s\n", gr->gr_name);
 	ft_printf("Size:\t\t%lld octets\n", s.st_size);
 	 */
-	infos->time = s.st_mtime;
+	infos->time = (int)s.st_mtime;
 	return (infos);
 }

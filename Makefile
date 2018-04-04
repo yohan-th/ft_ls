@@ -28,6 +28,7 @@ SRCS = 	ls_fillinfo.c \
         ls_getinfo.c \
         ls_print.c \
         ls_tool.c \
+        ls_clmn.c \
         main.c
 
 OBJS = $(addprefix $(DIR_OBJ)/,$(SRCS:.c=.o))

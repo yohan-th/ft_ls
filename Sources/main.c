@@ -66,13 +66,14 @@ int 		main(int ac, char **av)
 		while (*av)
 			ls_getinfo(&opts, *av++, &list_file, &list_fldr);
 	}
-	printf("test\n");
 	if (list_file->first)
-		ls_print(opts, *list_file, 0);
+		ls_print(opts, list_file, 0);
 	if (list_fldr->first)
-		ls_print(opts, *list_fldr, 1);
+		ls_print(opts, list_fldr, 1);
+
+
 	printf("*******************\n");
-	//ls_printview(opts, *list_file, 0);
+	//ls_viewlist(list_file);
 	printf("*******************\n");
 	//ls_printview(opts, *list_fldr, 0);
 	printf("*******************\n");
