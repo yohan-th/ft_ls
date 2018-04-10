@@ -67,3 +67,25 @@ int 		ls_lenlist(t_lslist *list)
 	}
 	return (nb_elem);
 }
+
+void		ls_freelist(t_lslist *list)
+{
+	t_lselem	*elem;
+	t_lselem	*free_elem;
+
+	elem = list->first;
+	while (elem)
+	{
+		if (elem->prev)
+			free(elem->prev);
+		if (!elem->next)
+			free(elem);
+		if (elem->path)
+		{
+			//printf("free path %s\n", elem->path);
+			free(elem->path);
+		}
+		elem = elem->next;
+	}
+	free(list);
+}

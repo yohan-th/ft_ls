@@ -56,9 +56,10 @@ t_lselem	*ls_fillinfo(char *elmt)
 	t_lselem	*infos;
 	char		*tmp;
 
-	//("elem %s\n", elmt);
-	if (!(infos = malloc(sizeof(t_lselem))) || (stat(elmt, &s)) == -1)
-		exit(EXIT_FAILURE);
+	//printf("--> elem %s\n", elmt);
+	if (!(infos = malloc(sizeof(t_lselem))) || (lstat(elmt, &s)) == -1)
+		ls_error(-1);
+	infos->path = elmt;
 	infos->name = ls_removepath(elmt);
 	/*
 	ft_printf("Type:\t\t%s\n", ft_def_elmt(s.st_mode));

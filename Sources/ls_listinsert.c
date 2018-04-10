@@ -41,10 +41,14 @@ int 	ls_cmp(t_lsfields *opts, t_lselem *elem1, t_lselem *elem2)
 	char *tmp1;
 	char *tmp2;
 
+	//printf("on compare elem1 %s et  %s elem2\n", elem1->name, elem2->name);
 	if (opts->t && elem1->time > elem2->time)
 		return (1);
-	else if (ft_strcmp(elem1->name, elem2->name) <= 0)
+	else if (ft_strcmp(elem1->path, elem2->path) <= 0)
+	{
+		//printf("return 1\n");
 		return (1);
+	}
 	else
 		return (0);
 }

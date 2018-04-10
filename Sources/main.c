@@ -15,7 +15,10 @@
 
 void	ls_error(char c)
 {
-	ft_printf("ft_ls: illegal option -- %c\n"
+	if (c < 0)
+		printf("--> Error code %d\n", c);
+	else
+		ft_printf("ft_ls: illegal option -- %c\n"
 			"usage: ls [-Ralrt] [file ...]\n", c);
 	exit(0);
 }
@@ -66,11 +69,17 @@ int 		main(int ac, char **av)
 		while (*av)
 			ls_getinfo(&opts, *av++, &list_file, &list_fldr);
 	}
+	printf("#############debut print files\n");
 	if (list_file->first)
 		ls_print(opts, list_file, 0);
+	printf("#############debut print folder\n");
+	ls_viewlist(list_fldr);
 	if (list_fldr->first)
 		ls_print(opts, list_fldr, 1);
-
+	printf("#############fin print main\n");
+	//if (list_file)
+	free(list_file);
+	//free(list_fldr);
 
 	printf("*******************\n");
 	//ls_viewlist(list_file);

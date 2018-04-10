@@ -80,8 +80,11 @@ void		ls_elempos(t_lslist *list_elem, t_lsprint print)
 	line = 0;
 	clmn = 1;
 	elem = list_elem->first;
+	//ls_viewlist(list_elem);
+
 	while (elem)
 	{
+		//printf("pos de %s\n", elem->path);
 		elem->sp_clmn = print.w_clmn - ft_strlen(elem->name);
 		elem->pos_clmn = clmn + (line * print.nb_clmn);
 		if (++line >= print.nb_line)
@@ -91,6 +94,7 @@ void		ls_elempos(t_lslist *list_elem, t_lsprint print)
 		}
 		elem = elem->next;
 	}
+	//printf("Fin boucle\n");
 }
 
 /*

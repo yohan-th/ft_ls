@@ -49,6 +49,7 @@ typedef struct  s_lselem
 {
 	int				time;
 	char			*name; //Est-ce qu'il faut ft_strdup ?
+	char 			*path;
 	int 			pos_clmn;
 	int 			sp_clmn;
 	struct s_lselem *next;
@@ -79,11 +80,12 @@ void			ls_print(t_lsfields opts, t_lslist *list_elem, BOOL fldr);
 t_lsprint		ls_columns(t_lsfields opts, t_lslist *list_elem);
 void			ls_revlist(t_lslist **list);
 
-
 // TOOLS
 char 			*ls_removepath(char *str);
 void			ls_viewlist(t_lslist *list);
 t_lslist		*ls_initlist(void);
 int 			ls_lenlist(t_lslist *list);
+void			ls_error(char c);
+void			ls_freelist(t_lslist *list);
 
 #endif
