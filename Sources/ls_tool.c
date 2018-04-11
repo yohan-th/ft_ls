@@ -30,6 +30,15 @@ char 		*ls_removepath(char *str)
 	}
 }
 
+int isDirectory(const char *path)
+{
+	t_stat statbuf;
+
+	if (stat(path, &statbuf) != 0)
+		return 0;
+	return S_ISDIR(statbuf.st_mode);
+}
+
 t_lslist	*ls_initlist(void)
 {
 	t_lslist *list;
@@ -71,19 +80,18 @@ int 		ls_lenlist(t_lslist *list)
 void		ls_freelist(t_lslist *list)
 {
 	t_lselem	*elem;
-	t_lselem	*free_elem;
 
 	elem = list->first;
 	while (elem)
 	{
 		if (elem->prev)
 			free(elem->prev);
-		if (!elem->next)
-			free(elem);
 		if (elem->path)
-		{
-			//printf("free path %s\n", elem->path);
 			free(elem->path);
+		if (!elem->next)
+		{
+			free(elem);
+			break;
 		}
 		elem = elem->next;
 	}

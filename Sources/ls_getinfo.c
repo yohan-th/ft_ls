@@ -13,7 +13,7 @@
 
 #include "../Include/ft_ls.h"
 
-void	ls_listfile(char *name, t_lslist **list_file, t_lsfields *opts)
+void	ls_listfile(char *name, t_lslist *list_file, t_lsfields *opts)
 {
 	t_lselem	*file_info;
 
@@ -21,7 +21,7 @@ void	ls_listfile(char *name, t_lslist **list_file, t_lsfields *opts)
 	ls_insert(file_info, list_file, opts);
 }
 
-void	ls_listfolder(char *name, t_lslist **list_fldr, t_lsfields *opts)
+void	ls_listfolder(char *name, t_lslist *list_fldr, t_lsfields *opts)
 {
 	t_lselem	*fldr_info;
 
@@ -30,7 +30,7 @@ void	ls_listfolder(char *name, t_lslist **list_fldr, t_lsfields *opts)
 	ls_insert(fldr_info, list_fldr, opts);
 }
 
-void	ls_readdir(t_lsfields opts, char *name, t_lslist **list_file)
+void	ls_readdir(t_lsfields opts, char *name, t_lslist *list_file)
 {
 	DIR 		*rep;
 	t_dirent	*files;
@@ -47,22 +47,19 @@ void	ls_readdir(t_lsfields opts, char *name, t_lslist **list_file)
 			file_path = ft_strjoin_mltp(3, name, "/", files->d_name);
 			file_info = ls_fillinfo(file_path);
 			ls_insert(file_info, list_file, &opts);
-			//printf("la liste se ralonge :\n");
-			//ls_viewlist(*list_file);
 		}
 		//printf("**path de file %s\n", file_info->path);
 	}
-	//printf("fin de fichier\n");
 	closedir(rep);
 }
 
-void	ls_getinfo(t_lsfields *opts, char *elmt, t_lslist **list_file, t_lslist **list_fldr)
+void	ls_getinfo(t_lsfields *opts, char *elmt, t_lslist *list_file, t_lslist *list_fldr)
 {
 	//printf("elmt %s\n", elmt);
 	if (ft_strcmp(elmt, ".") == 0)
 		ls_readdir(*opts, ".", list_file);
-	else if (opendir(elmt) == 0)
-		ls_listfile(elmt, list_file, opts);
-	else
+	else if (isDirectory(elmt))
 		ls_listfolder(elmt, list_fldr, opts);
+	else
+		ls_listfile(elmt, list_file, opts);
 }

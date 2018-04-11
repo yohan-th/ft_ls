@@ -18,12 +18,12 @@
 ** ainsi que le pointeur vers le premier avec le dernier
 */
 
-void	ls_revlist(t_lslist **list)
+void	ls_revlist(t_lslist *list)
 {
 	t_lselem	*t_next;
 	t_lselem	*tmp;
 
-	t_next = (*list)->first;
+	t_next = list->first;
 	while (t_next)
 	{
 		tmp = t_next->next;
@@ -31,9 +31,9 @@ void	ls_revlist(t_lslist **list)
 		t_next->prev = tmp;
 		t_next = t_next->prev;
 	}
-	tmp = (*list)->first;
-	(*list)->first = (*list)->last;
-	(*list)->last = tmp;
+	tmp = list->first;
+	list->first = list->last;
+	list->last = tmp;
 }
 
 int 	ls_cmp(t_lsfields *opts, t_lselem *elem1, t_lselem *elem2)
@@ -45,22 +45,19 @@ int 	ls_cmp(t_lsfields *opts, t_lselem *elem1, t_lselem *elem2)
 	if (opts->t && elem1->time > elem2->time)
 		return (1);
 	else if (ft_strcmp(elem1->path, elem2->path) <= 0)
-	{
-		//printf("return 1\n");
 		return (1);
-	}
 	else
 		return (0);
 }
 
-void	ls_insert(t_lselem *elem, t_lslist **list, t_lsfields *opts)
+void	ls_insert(t_lselem *elem, t_lslist *list, t_lsfields *opts)
 {
 	t_lselem *t_prev;
 	t_lselem *t_next;
 
 	//printf("new elem %s\n", elem->name);
 	t_prev = NULL;
-	t_next = (*list)->first;
+	t_next = list->first;
 	while (t_next && ls_cmp(opts, t_next, elem))
 	{
 		t_prev = t_next;
@@ -73,7 +70,7 @@ void	ls_insert(t_lselem *elem, t_lslist **list, t_lsfields *opts)
 	if (t_prev)
 		t_prev->next = elem;
 	if (!elem->prev)
-		(*list)->first = elem;
+		list->first = elem;
 	if (!elem->next)
-		(*list)->last = elem;
+		list->last = elem;
 }

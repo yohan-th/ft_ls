@@ -50,16 +50,13 @@ void	ls_fldr(t_lsfields opts, t_lslist *list_elem)
 	elem = list_elem->first;
 	while (elem)
 	{
-		if (opts.nb_folders > 1)
+		if (ls_lenlist(list_elem) > 1)
 			ft_printf("%s:\n", elem->path);
 		list_file = ls_initlist();
-		ls_readdir(opts, elem->path, &list_file);
+		ls_readdir(opts, elem->path, list_file);
 		if (opts.r_lwr && list_file->first)
-			ls_revlist(&list_file);
-		//printf("on print le dossier %s\n", elem->name);
-		//printf("la liste des fichier sont : \n");
-		//ls_viewlist(list_file);
-		ls_print(opts, list_file, 0);
+			ls_revlist(list_file);
+		ls_print(&opts, list_file, 0);
 		elem = elem->next;
 	}
 }
@@ -68,51 +65,52 @@ void	ls_explore(t_lsfields opts, t_lslist *list_elem)
 {
 	t_lselem	*elem;
 	t_lslist	*list_file;
+	DIR 		*rep;
 
 	elem = list_elem->first;
 	while (elem)
 	{
-		//printf("explore folder ? %s\n", elem->path);
-		if (opendir(elem->path) != 0)
+
+		if ((rep = opendir(elem->path)))
 		{
 			//printf("dossier GO\n");
 			ft_printf("%s:\n", elem->path);
 			list_file = ls_initlist();
 			//printf("on rentre dans le dossier %s\n", elem->path);
-			ls_readdir(opts, elem->path, &list_file);
+			ls_readdir(opts, elem->path, list_file);
 			if (opts.r_lwr && list_file->first)
-				ls_revlist(&list_file);
-			ls_print(opts, list_file, 0);
+				ls_revlist(list_file);
+			ls_print(&opts, list_file, 0);
 			//ls_freelist(list_file);
+			closedir(rep);
 		}
+
 		elem = elem->next;
 	}
 }
 
-void	ls_print(t_lsfields opts, t_lslist *list_elem, BOOL fldr)
+void	ls_print(t_lsfields *opts, t_lslist *list_elem, BOOL fldr)
 {
 	t_lsprint	print;
 
-	if (opts.r_lwr)
-		ls_revlist(&list_elem);
+	if (opts->r_lwr)
+		ls_revlist(list_elem);
 	if (fldr)
-		ls_fldr(opts, list_elem);
+		ls_fldr(*opts, list_elem);
 	else if (ls_lenlist(list_elem) > 0)
 	{
-		//printf("icic\n");
-		print = ls_columns(opts, list_elem);
-		//printf("rien trille en clmn\n");
-		ls_printclmn(opts, list_elem, print);
-		printf("\n");
+		print = ls_columns(*opts, list_elem);
+		ls_printclmn(*opts, list_elem, print);
+		//printf("******* test\n");
+		//ls_viewlist(list_elem);
+		//printf("*******\n");
+		opts->nb_folders -= 1;
+		if (opts->nb_folders > 0)
+			write(1, "\n", 1);
 	}
-	//free(list_elem);
 	//printf("ICI\n");
-	if (opts.r_upr && !fldr)
-		ls_explore(opts, list_elem);
-	//ls_freelist(list_elem);
+	if (opts->r_upr && !fldr)
+		ls_explore(*opts, list_elem);
+	ls_freelist(list_elem);
 	//printf("Fin print\n");
-	//else
-
 }
-
-//Applications/Slack.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/hi.lproj:

@@ -48,7 +48,7 @@ typedef struct	s_lsfields
 typedef struct  s_lselem
 {
 	int				time;
-	char			*name; //Est-ce qu'il faut ft_strdup ?
+	char			*name;
 	char 			*path;
 	int 			pos_clmn;
 	int 			sp_clmn;
@@ -73,12 +73,12 @@ typedef struct s_lsprint
 
 t_lselem		*ls_fillinfo(char *elmt);
 int				ls_list_dir(char *folder, BOOL all);
-void			ls_insert(t_lselem *elem, t_lslist **list, t_lsfields *opts);
-void			ls_getinfo(t_lsfields *opts, char *elmt, t_lslist **list_file, t_lslist **list_fldr);
-void			ls_readdir(t_lsfields opts, char *name, t_lslist **list_file);
-void			ls_print(t_lsfields opts, t_lslist *list_elem, BOOL fldr);
+void			ls_insert(t_lselem *elem, t_lslist *list, t_lsfields *opts);
+void			ls_getinfo(t_lsfields *opts, char *elmt, t_lslist *list_file, t_lslist *list_fldr);
+void			ls_readdir(t_lsfields opts, char *name, t_lslist *list_file);
+void			ls_print(t_lsfields *opts, t_lslist *list_elem, BOOL fldr);
 t_lsprint		ls_columns(t_lsfields opts, t_lslist *list_elem);
-void			ls_revlist(t_lslist **list);
+void			ls_revlist(t_lslist *list);
 
 // TOOLS
 char 			*ls_removepath(char *str);
@@ -87,5 +87,6 @@ t_lslist		*ls_initlist(void);
 int 			ls_lenlist(t_lslist *list);
 void			ls_error(char c);
 void			ls_freelist(t_lslist *list);
+int 			isDirectory(const char *path);
 
 #endif
