@@ -43,6 +43,7 @@ typedef struct	s_lsfields
 	BOOL	t;
 	int		nb_folders;
 	int 	nb_files;
+	BOOL	bgn_print;
 }				t_lsfields;
 
 typedef struct  s_lselem

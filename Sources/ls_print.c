@@ -13,7 +13,7 @@
 
 #include "../Include/ft_ls.h"
 
-void	ls_printclmn(t_lsfields opts, t_lslist *list_elem, t_lsprint print)
+void	ls_printclmn(t_lslist *list_elem, t_lsprint print)
 {
 	t_lselem	*elem;
 	int 		file;
@@ -42,26 +42,36 @@ void	ls_printclmn(t_lsfields opts, t_lslist *list_elem, t_lsprint print)
 	}
 }
 
-void	ls_fldr(t_lsfields opts, t_lslist *list_elem)
+/*
+** bgn_print va permettre de sauter une ligne entre chaque
+** element sauf au debut & fin
+*/
+
+void	ls_fldr(t_lsfields *opts, t_lslist *list_elem)
 {
 	t_lslist	*list_file;
 	t_lselem	*elem;
+
 
 	elem = list_elem->first;
 	while (elem)
 	{
 		if (ls_lenlist(list_elem) > 1)
+		{
+			if (opts->bgn_print)
+				write(1, "\n", 1);
 			ft_printf("%s:\n", elem->path);
+		}
 		list_file = ls_initlist();
-		ls_readdir(opts, elem->path, list_file);
-		if (opts.r_lwr && list_file->first)
+		ls_readdir(*opts, elem->path, list_file);
+		if (opts->r_lwr && list_file->first)
 			ls_revlist(list_file);
-		ls_print(&opts, list_file, 0);
+		ls_print(opts, list_file, 0);
 		elem = elem->next;
 	}
 }
 
-void	ls_explore(t_lsfields opts, t_lslist *list_elem)
+void	ls_explore(t_lsfields *opts, t_lslist *list_elem)
 {
 	t_lselem	*elem;
 	t_lslist	*list_file;
@@ -70,21 +80,18 @@ void	ls_explore(t_lsfields opts, t_lslist *list_elem)
 	elem = list_elem->first;
 	while (elem)
 	{
-
 		if ((rep = opendir(elem->path)))
 		{
-			//printf("dossier GO\n");
+			if (opts->bgn_print)
+				write(1, "\n", 1);
 			ft_printf("%s:\n", elem->path);
 			list_file = ls_initlist();
-			//printf("on rentre dans le dossier %s\n", elem->path);
-			ls_readdir(opts, elem->path, list_file);
-			if (opts.r_lwr && list_file->first)
+			ls_readdir(*opts, elem->path, list_file);
+			if (opts->r_lwr && list_file->first)
 				ls_revlist(list_file);
-			ls_print(&opts, list_file, 0);
-			//ls_freelist(list_file);
+			ls_print(opts, list_file, 0);
 			closedir(rep);
 		}
-
 		elem = elem->next;
 	}
 }
@@ -96,21 +103,15 @@ void	ls_print(t_lsfields *opts, t_lslist *list_elem, BOOL fldr)
 	if (opts->r_lwr)
 		ls_revlist(list_elem);
 	if (fldr)
-		ls_fldr(*opts, list_elem);
+		ls_fldr(opts, list_elem);
 	else if (ls_lenlist(list_elem) > 0)
 	{
+		opts->bgn_print = 1;
 		print = ls_columns(*opts, list_elem);
-		ls_printclmn(*opts, list_elem, print);
-		//printf("******* test\n");
-		//ls_viewlist(list_elem);
-		//printf("*******\n");
+		ls_printclmn(list_elem, print);
 		opts->nb_folders -= 1;
-		if (opts->nb_folders > 0)
-			write(1, "\n", 1);
 	}
-	//printf("ICI\n");
 	if (opts->r_upr && !fldr)
-		ls_explore(*opts, list_elem);
+		ls_explore(opts, list_elem);
 	ls_freelist(list_elem);
-	//printf("Fin print\n");
 }
