@@ -30,8 +30,8 @@ int			ls_lenclmn(t_lslist *list_elem)
 	elem = list_elem->first;
 	while (elem)
 	{
-		if (ft_strlen(elem->name) > (len - 7))
-			len = ft_strlen(elem->name) + 7;
+		if (ft_strlen(elem->name) > (len - 1))
+			len = ft_strlen(elem->name) + 1;
 		elem = elem->next;
 	}
 	return (len);

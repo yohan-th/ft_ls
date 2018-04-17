@@ -28,7 +28,7 @@ void	ls_printclmn(t_lslist *list_elem, t_lsprint print)
 		{
 			if (elem->pos_clmn == file)
 			{
-				ft_printf("%s", elem->name);
+				ft_printf("%s%s\x1b[0m", elem->color, elem->name);
 				ft_putchar_dup(' ', elem->sp_clmn);
 				found = 1;
 			}
@@ -96,6 +96,11 @@ void	ls_explore(t_lsfields *opts, t_lslist *list_elem)
 	}
 }
 
+void	ls_lprint(t_lsfields *opts, t_lslist *list_elem)
+{
+	;
+}
+
 void	ls_print(t_lsfields *opts, t_lslist *list_elem, BOOL fldr)
 {
 	t_lsprint	print;
@@ -104,12 +109,16 @@ void	ls_print(t_lsfields *opts, t_lslist *list_elem, BOOL fldr)
 		ls_revlist(list_elem);
 	if (fldr)
 		ls_fldr(opts, list_elem);
+	else if (ls_lenlist(list_elem) > 0 && opts->l)
+	{
+		opts->bgn_print = 1;
+		ls_lprint(opts, list_elem);
+	}
 	else if (ls_lenlist(list_elem) > 0)
 	{
 		opts->bgn_print = 1;
 		print = ls_columns(*opts, list_elem);
 		ls_printclmn(list_elem, print);
-		opts->nb_folders -= 1;
 	}
 	if (opts->r_upr && !fldr)
 		ls_explore(opts, list_elem);

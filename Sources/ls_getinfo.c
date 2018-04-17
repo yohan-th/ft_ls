@@ -13,11 +13,15 @@
 
 #include "../Include/ft_ls.h"
 
+/*
+** Le strdup dans fillinfo permet de free la liste chainé
+*/
+
 void	ls_listfile(char *name, t_lslist *list_file, t_lsfields *opts)
 {
 	t_lselem	*file_info;
 
-	file_info = ls_fillinfo(name);
+	file_info = ls_fillelem(ft_strdup(name));
 	ls_insert(file_info, list_file, opts);
 }
 
@@ -26,7 +30,7 @@ void	ls_listfolder(char *name, t_lslist *list_fldr, t_lsfields *opts)
 	t_lselem	*fldr_info;
 
 	opts->nb_folders += 1;
-	fldr_info = ls_fillinfo(ft_strdup(name));
+	fldr_info = ls_fillelem(ft_strdup(name));
 	ls_insert(fldr_info, list_fldr, opts);
 }
 
@@ -43,7 +47,7 @@ void	ls_readdir(t_lsfields opts, char *name, t_lslist *list_file)
 		if (!(!(opts.a) && files->d_name[0] == '.'))
 		{
 			file_path = ft_strjoin_mltp(3, name, "/", files->d_name);
-			file_info = ls_fillinfo(file_path);
+			file_info = ls_fillelem(file_path);
 			ls_insert(file_info, list_file, &opts);
 		}
 		//printf("**path de file %s\n", file_info->path);

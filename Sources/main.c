@@ -70,11 +70,14 @@ int 		main(int ac, char **av)
 	}
 	if (list_file->first)
 		ls_print(&opts, list_file, 0);
-	else
-		free(list_file);
+//	else
+//		free(list_file);
 	if (list_fldr->first)
+	{
+		printf("ici\n");
 		ls_print(&opts, list_fldr, 1);
-	else
-		free(list_fldr);
+	}
+//	else
+//		free(list_fldr);
     return (1);
 }

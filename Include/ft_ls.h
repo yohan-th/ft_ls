@@ -51,6 +51,12 @@ typedef struct  s_lselem
 	int				time;
 	char			*name;
 	char 			*path;
+	char 			*color;
+	char 			*right;
+	int 			size;
+	int 			nb_link;
+	char			*owner;
+	char 			*group;
 	int 			pos_clmn;
 	int 			sp_clmn;
 	struct s_lselem *next;
@@ -72,7 +78,7 @@ typedef struct s_lsprint
 	int nb_line;
 }				t_lsprint;
 
-t_lselem		*ls_fillinfo(char *elmt);
+t_lselem		*ls_fillelem(char *elmt);
 int				ls_list_dir(char *folder, BOOL all);
 void			ls_insert(t_lselem *elem, t_lslist *list, t_lsfields *opts);
 void			ls_getinfo(t_lsfields *opts, char *elmt, t_lslist *list_file, t_lslist *list_fldr);

@@ -22,7 +22,7 @@ DIR_INC = Include
 DIR_SRC = Sources
 DIR_OBJ = Objects
 
-SRCS = 	ls_fillinfo.c \
+SRCS = 	ls_fillelem.c \
         ls_listinsert.c \
         ls_getinfo.c \
         ls_print.c \
