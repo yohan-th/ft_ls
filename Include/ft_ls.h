@@ -49,6 +49,7 @@ typedef struct	s_lsfields
 typedef struct  s_lselem
 {
 	int				time;
+	char 			*ltime;
 	char			*name;
 	char 			*path;
 	char 			*color;
@@ -77,6 +78,8 @@ typedef struct s_lsprint
 	int nb_clmn;
 	int nb_line;
 }				t_lsprint;
+
+//n i d C
 
 t_lselem		*ls_fillelem(char *elmt);
 int				ls_list_dir(char *folder, BOOL all);

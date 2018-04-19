@@ -72,10 +72,8 @@ char		*ls_getcolor(mode_t st_mode)
 t_lselem	*ls_fillelem(char *elmt)
 {
 	t_stat		s;
-	t_passwd	*pw;
-	t_group		*gr;
 	t_lselem	*infos;
-	char		*tmp;
+	char		*ltime;
 
 	if (!(infos = malloc(sizeof(t_lselem))) || (lstat(elmt, &s)) == -1)
 		ls_error(-1);
@@ -88,5 +86,8 @@ t_lselem	*ls_fillelem(char *elmt)
 	infos->owner = getpwuid(s.st_uid)->pw_name;
 	infos->group = getgrgid(s.st_gid)->gr_name;
 	infos->time = (int)s.st_mtime;
+	ltime = ctime(&s.st_mtime);
+	ltime[16] = '\0';
+	infos->ltime = ltime + 4;
 	return (infos);
 }

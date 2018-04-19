@@ -96,9 +96,33 @@ void	ls_explore(t_lsfields *opts, t_lslist *list_elem)
 	}
 }
 
-void	ls_lprint(t_lsfields *opts, t_lslist *list_elem)
+void	ls_printlong(t_lsfields *opts, t_lslist *list_elem)
 {
-	;
+	t_lselem	*elem;
+	int 		max_sp_nblink;
+	int 		max_sp_size;
+
+	elem = list_elem->first;
+	max_sp_nblink = 0;
+	max_sp_size = 0;
+	while (elem)
+	{
+		if (ft_lenint(elem->nb_link) > max_sp_nblink)
+			max_sp_nblink = ft_lenint(elem->nb_link);
+		if (ft_lenint(elem->size) > max_sp_size)
+			max_sp_size = ft_lenint(elem->size);
+		elem = elem->next;
+	}
+	elem = list_elem->first;
+	while (elem)
+	{
+		if (ls_lenlist(list_elem) > 1)
+			printf("%s  %*d  %s  %s %*d %s  %s%s\x1b[0m\n",
+				   elem->right, max_sp_nblink, elem->nb_link,
+				   elem->owner, elem->group, max_sp_size, elem->size,
+				   elem->ltime, elem->color, elem->name);
+		elem = elem->next;
+	}
 }
 
 void	ls_print(t_lsfields *opts, t_lslist *list_elem, BOOL fldr)
@@ -112,7 +136,7 @@ void	ls_print(t_lsfields *opts, t_lslist *list_elem, BOOL fldr)
 	else if (ls_lenlist(list_elem) > 0 && opts->l)
 	{
 		opts->bgn_print = 1;
-		ls_lprint(opts, list_elem);
+		ls_printlong(opts, list_elem);
 	}
 	else if (ls_lenlist(list_elem) > 0)
 	{
