@@ -28,9 +28,7 @@
 
 # include "../Libft/Includes/libft.h"
 
-typedef struct stat		t_stat;
-typedef struct group	t_group;
-typedef struct passwd	t_passwd;
+typedef struct stat	t_stat;
 typedef struct dirent	t_dirent;
 typedef struct winsize	t_winsize;
 
@@ -54,10 +52,12 @@ typedef struct  s_lselem
 	char 			*path;
 	char 			*color;
 	char 			*right;
+	char            additional_right;
 	int 			size;
 	int 			nb_link;
 	char			*owner;
 	char 			*group;
+	char 			*link;
 	int 			pos_clmn;
 	int 			sp_clmn;
 	struct s_lselem *next;
@@ -88,7 +88,6 @@ void			ls_getinfo(t_lsfields *opts, char *elmt, t_lslist *list_file, t_lslist *l
 void			ls_readdir(t_lsfields opts, char *name, t_lslist *list_file);
 void			ls_print(t_lsfields *opts, t_lslist *list_elem, BOOL fldr);
 t_lsprint		ls_columns(t_lsfields opts, t_lslist *list_elem);
-void			ls_revlist(t_lslist *list);
 
 // TOOLS
 char 			*ls_removepath(char *str);

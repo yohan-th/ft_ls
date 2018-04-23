@@ -36,9 +36,9 @@ void	ls_listfolder(char *name, t_lslist *list_fldr, t_lsfields *opts)
 
 void	ls_readdir(t_lsfields opts, char *name, t_lslist *list_file)
 {
-	DIR 		*rep;
+	DIR			*rep;
 	t_dirent	*files;
-	char 		*file_path;
+	char		*file_path;
 	t_lselem	*file_info;
 
 	rep = opendir(name);
@@ -55,7 +55,8 @@ void	ls_readdir(t_lsfields opts, char *name, t_lslist *list_file)
 	closedir(rep);
 }
 
-void	ls_getinfo(t_lsfields *opts, char *elmt, t_lslist *list_file, t_lslist *list_fldr)
+void	ls_getinfo(t_lsfields *opts, char *elmt, t_lslist *list_file,
+				   t_lslist *list_fldr)
 {
 	//printf("elmt %s\n", elmt);
 	if (ft_strcmp(elmt, ".") == 0)
