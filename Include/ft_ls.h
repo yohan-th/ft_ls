@@ -39,10 +39,15 @@ typedef struct	s_lsfields
 	BOOL	l;
 	BOOL	r_lwr;
 	BOOL	t;
+	BOOL    g;
 	int		nb_folders;
 	int 	nb_files;
 	BOOL	bgn_print;
 }				t_lsfields;
+
+/*
+** size est une chaine de caractere de chiffre car contiendra
+*/
 
 typedef struct  s_lselem
 {
@@ -53,11 +58,13 @@ typedef struct  s_lselem
 	char 			*color;
 	char 			*right;
 	char            additional_right;
-	int 			size;
 	int 			nb_link;
 	char			*owner;
 	char 			*group;
 	char 			*link;
+	char 			*size;
+	int             major;
+	int             minor;
 	int 			pos_clmn;
 	int 			sp_clmn;
 	struct s_lselem *next;
@@ -88,9 +95,9 @@ void			ls_getinfo(t_lsfields *opts, char *elmt, t_lslist *list_file, t_lslist *l
 void			ls_readdir(t_lsfields opts, char *name, t_lslist *list_file);
 void			ls_print(t_lsfields *opts, t_lslist *list_elem, BOOL fldr);
 t_lsprint		ls_columns(t_lsfields opts, t_lslist *list_elem);
+void		    ls_explore(t_lsfields *opts, t_lslist *list_elem);
 
 // TOOLS
-char 			*ls_removepath(char *str);
 void			ls_viewlist(t_lslist *list);
 t_lslist		*ls_initlist(void);
 int 			ls_lenlist(t_lslist *list);

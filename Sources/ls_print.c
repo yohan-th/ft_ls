@@ -61,6 +61,7 @@ void		ls_fldr(t_lsfields *opts, t_lslist *list_elem)
 			if (opts->bgn_print)
 				write(1, "\n", 1);
 			ft_printf("%s:\n", elem->path);
+			opts->bgn_print = 1;
 		}
 		list_file = ls_initlist();
 		ls_readdir(*opts, elem->path, list_file);
@@ -69,25 +70,30 @@ void		ls_fldr(t_lsfields *opts, t_lslist *list_elem)
 	}
 }
 
-void		ls_explore(t_lsfields *opts, t_lslist *list_elem)
+void    ls_spacelong(int *max_nblink, int *max_size, int *max_owner,
+                     int *max_group, t_lslist *list_elem)
 {
 	t_lselem	*elem;
-	t_lslist	*list_file;
-	DIR 		*rep;
 
+	*max_nblink = 0;
+	*max_size = 0;
+	*max_owner = 0;
+	*max_group = 0;
 	elem = list_elem->first;
 	while (elem)
 	{
-		if ((rep = opendir(elem->path)))
-		{
-			if (opts->bgn_print)
-				write(1, "\n", 1);
-			ft_printf("%s:\n", elem->path);
-			list_file = ls_initlist();
-			ls_readdir(*opts, elem->path, list_file);
-			ls_print(opts, list_file, 0);
-			closedir(rep);
-		}
+		if (ft_strchr("cb", elem->right[0]))
+			elem->size = ft_strjoin_mltp(4, ft_itoa(elem->major), ",",
+			             ft_chardup(' ', 4 - ft_digitlen(elem->minor)),
+			             ft_itoa(elem->minor));
+		if (ft_lenint(elem->nb_link) > *max_nblink)
+			*max_nblink = ft_lenint(elem->nb_link);
+		if (ft_strlen(elem->size) > *max_size)
+			*max_size = ft_strlen(elem->size);
+		if (ft_strlen(elem->owner) > *max_owner)
+			*max_owner = ft_strlen(elem->owner);
+		if (ft_strlen(elem->group) > *max_group)
+			*max_group = ft_strlen(elem->group);
 		elem = elem->next;
 	}
 }
@@ -97,35 +103,21 @@ void		ls_printlong(t_lsfields *opts, t_lslist *list_elem)
 	t_lselem	*elem;
 	int 		max_nblink;
 	int 		max_size;
-	int		    max_owner;
+	int		max_owner;
 	int 		max_group;
 
-	elem = list_elem->first;
-	max_nblink = 0;
-	max_size = 0;
-	max_owner = 0;
-	max_group = 0;
-	while (elem)
-	{
-		if (ft_lenint(elem->nb_link) > max_nblink)
-			max_nblink = ft_lenint(elem->nb_link);
-		if (ft_lenint(elem->size) > max_size)
-			max_size = ft_lenint(elem->size);
-		if (ft_strlen(elem->owner) > max_owner)
-			max_owner = ft_strlen(elem->owner);
-		if (ft_strlen(elem->group) > max_group)
-			max_group = ft_strlen(elem->group);
-		elem = elem->next;
-	}
-	ft_printf("Total\n");
+	ls_spacelong(&max_nblink, &max_size, &max_owner, &max_group, list_elem);
+	ft_printf("Total x\n");
 	elem = list_elem->first;
 	while (elem)
 	{
 		if (ls_lenlist(list_elem) > 1)
 		{
-			ft_printf("%s%c %*d %-*s  %-*s  %*d %s %s%s\x1b[0m", elem->right, elem->additional_right,
-				   max_nblink, elem->nb_link, max_owner, elem->owner, max_group, elem->group,
-				   max_size, elem->size, elem->ltime, elem->color, elem->name);
+			ft_printf("%s%c %*d %-*s  %-*s  %*s %s %s%s\x1b[0m",
+			          elem->right, elem->additional_right, max_nblink,
+			          elem->nb_link, max_owner, elem->owner, max_group,
+			          elem->group, max_size, elem->size, elem->ltime,
+				      elem->color, elem->name);
 			if (elem->link)
 				ft_printf(" -> %s\n", elem->link);
 			else

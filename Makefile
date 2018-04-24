@@ -23,10 +23,9 @@ DIR_SRC = Sources
 DIR_OBJ = Objects
 
 SRCS = 	ls_fillelem.c \
-        ls_listinsert.c \
+        ls_list.c \
         ls_getinfo.c \
         ls_print.c \
-        ls_tool.c \
         ls_clmn.c \
         main.c
 

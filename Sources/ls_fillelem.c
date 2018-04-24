@@ -107,6 +107,11 @@ char        *ls_time(t_stat s)
 	return(ltime + 4);
 }
 
+/*
+** {infos->size} est un char* car {major + "," + minor} remplacera {s.st_size}
+** lors de ls_printlong
+*/
+
 t_lselem	*ls_fillelem(char *elmt)
 {
 	t_stat	    s;
@@ -116,11 +121,13 @@ t_lselem	*ls_fillelem(char *elmt)
 	if (!(infos = malloc(sizeof(t_lselem))) || (lstat(elmt, &s)) == -1)
 		ls_error(-1);
 	infos->path = elmt;
-	infos->name = ls_removepath(elmt);
+	infos->name = ft_rmvpath(elmt);
 	infos->color = ls_def_typeORcolor(s.st_mode, "color");
 	infos->right = ls_def_right(s);
 	infos->additional_right = ls_additional_right(elmt);
-	infos->size = (int)s.st_size;
+	infos->size = ft_itoa((int)s.st_size);
+	infos->major = major(s.st_rdev);
+	infos->minor = minor(s.st_rdev);
 	infos->nb_link = s.st_nlink;
 	infos->owner = getpwuid(s.st_uid)->pw_name;
 	infos->group = getgrgid(s.st_gid)->gr_name;

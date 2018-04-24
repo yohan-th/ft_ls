@@ -1,43 +1,17 @@
 /* ************************************************************************** */
 /*                                                          LE - /            */
 /*                                                              /             */
-/*   ls_tool.c                                        .::    .:/ .      .::   */
+/*   ls_listinsert.c                                  .::    .:/ .      .::   */
 /*                                                 +:+:+   +:    +:  +:+:+    */
 /*   By: ythollet <ythollet@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
-/*   Created: 2018/03/30 00:12:28 by ythollet     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/30 00:12:28 by ythollet    ###    #+. /#+    ###.fr     */
+/*   Created: 2018/03/27 14:11:03 by ythollet     #+#   ##    ##    #+#       */
+/*   Updated: 2018/03/27 14:11:03 by ythollet    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "../Include/ft_ls.h"
-
-/*
-** ls_removepath : le while prend un compte le dernier '/' en fin de path
-** et le conserve. Ex ~/path/de/mon/fichier/ --> fichier/
-*/
-
-char 		*ls_removepath(char *str)
-{
-	if (!ft_strchr(str, '/') && (ft_strchr(str, '/') + 1) == '\0')
-		return (str);
-	else
-	{
-		while (ft_strchr(str, '/') != NULL && ft_strlen(ft_strchr(str, '/')) != 1)
-			str = ft_strchr(str, '/') + 1;
-		return (str);
-	}
-}
-
-int isDirectory(const char *path)
-{
-	t_stat statbuf;
-
-	if (stat(path, &statbuf) != 0)
-		return 0;
-	return S_ISDIR(statbuf.st_mode);
-}
 
 t_lslist	*ls_initlist(void)
 {
@@ -48,18 +22,6 @@ t_lslist	*ls_initlist(void)
 	list->first = NULL;
 	list->last = NULL;
 	return (list);
-}
-
-void		ls_viewlist(t_lslist *list)
-{
-	t_lselem	*elem;
-
-	elem = list->first;
-	while (elem)
-	{
-		printf("%s\n", elem->name);
-		elem = elem->next;
-	}
 }
 
 int 		ls_lenlist(t_lslist *list)
@@ -96,4 +58,42 @@ void		ls_freelist(t_lslist *list)
 		elem = elem->next;
 	}
 	free(list);
+}
+
+int		ls_cmp(t_lsfields *opts, t_lselem *elem1, t_lselem *elem2)
+{
+	//ft_printf("on compare elem1 %s et  %s elem2\n", elem1->name, elem2->name);
+	if (opts->t && elem1->time > elem2->time)
+		return (1);
+	else if (opts->r_lwr && ft_strcmp(elem1->path, elem2->path) >= 0)
+		return (1);
+	else if (!opts->r_lwr && ft_strcmp(elem1->path, elem2->path) <= 0)
+		return (1);
+	else
+		return (0);
+}
+
+void	ls_insert(t_lselem *elem, t_lslist *list, t_lsfields *opts)
+{
+	t_lselem *t_prev;
+	t_lselem *t_next;
+
+	//ft_printf("new elem %s\n", elem->color);
+	t_prev = NULL;
+	t_next = list->first;
+	while (t_next && ls_cmp(opts, t_next, elem))
+	{
+		t_prev = t_next;
+		t_next = t_next->next;
+	}
+	elem->next = t_next;
+	elem->prev = t_prev;
+	if (t_next)
+		t_next->prev = elem;
+	if (t_prev)
+		t_prev->next = elem;
+	if (!elem->prev)
+		list->first = elem;
+	if (!elem->next)
+		list->last = elem;
 }
