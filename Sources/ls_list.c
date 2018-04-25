@@ -59,13 +59,13 @@ void		ls_freelist(t_lslist *list)
 		free(elem->size);
 		free(elem->owner);
 		free(elem->group);
+		if (elem->link)
+			free(elem->link);
 		if (!elem->next)
 		{
 			free(elem);
 			break ;
 		}
-		if (elem->link)
-			free(elem->link);
 		elem = elem->next;
 	}
 	free(list);
