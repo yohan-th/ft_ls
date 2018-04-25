@@ -16,7 +16,7 @@
 void		ls_printclmn(t_lslist *list_elem, t_lsprint print)
 {
 	t_lselem	*elem;
-	int 		file;
+	int			file;
 	BOOL		found;
 
 	file = 1;
@@ -52,7 +52,6 @@ void		ls_fldr(t_lsfields *opts, t_lslist *list_elem)
 	t_lslist	*list_file;
 	t_lselem	*elem;
 
-
 	elem = list_elem->first;
 	while (elem)
 	{
@@ -70,54 +69,46 @@ void		ls_fldr(t_lsfields *opts, t_lslist *list_elem)
 	}
 }
 
-void    ls_spacelong(int *max_nblink, int *max_size, int *max_owner,
-                     int *max_group, t_lslist *list_elem)
+t_lsprint	ls_spacelong(t_lslist *list_elem, t_lsprint print)
 {
 	t_lselem	*elem;
 
-	*max_nblink = 0;
-	*max_size = 0;
-	*max_owner = 0;
-	*max_group = 0;
 	elem = list_elem->first;
 	while (elem)
 	{
 		if (ft_strchr("cb", elem->right[0]))
-			elem->size = ft_strjoin_mltp(4, ft_itoa(elem->major), ",",
-			             ft_chardup(' ', 4 - ft_digitlen(elem->minor)),
-			             ft_itoa(elem->minor));
-		if (ft_lenint(elem->nb_link) > *max_nblink)
-			*max_nblink = ft_lenint(elem->nb_link);
-		if (ft_strlen(elem->size) > *max_size)
-			*max_size = ft_strlen(elem->size);
-		if (ft_strlen(elem->owner) > *max_owner)
-			*max_owner = ft_strlen(elem->owner);
-		if (ft_strlen(elem->group) > *max_group)
-			*max_group = ft_strlen(elem->group);
+			elem->size = ft_strjoin_mltp(5, " ", ft_itoa(elem->major), ",",
+							ft_chardup(' ', 4 - ft_digitlen(elem->minor)),
+							ft_itoa(elem->minor));
+		if (ft_lenint(elem->nb_link) > print.sp_nblink)
+			print.sp_nblink = ft_lenint(elem->nb_link);
+		if (ft_strlen(elem->size) > print.sp_size)
+			print.sp_size = ft_strlen(elem->size);
+		if (ft_strlen(elem->owner) > print.sp_owner)
+			print.sp_owner = ft_strlen(elem->owner);
+		if (ft_strlen(elem->group) > print.sp_group)
+			print.sp_group = ft_strlen(elem->group);
+		print.nb_blocks += elem->st_blocks;
 		elem = elem->next;
 	}
+	return (print);
 }
 
-void		ls_printlong(t_lsfields *opts, t_lslist *list_elem)
+void		ls_printlong(t_lslist *list_elem, t_lsprint print)
 {
 	t_lselem	*elem;
-	int 		max_nblink;
-	int 		max_size;
-	int		max_owner;
-	int 		max_group;
 
-	ls_spacelong(&max_nblink, &max_size, &max_owner, &max_group, list_elem);
-	ft_printf("Total x\n");
+	ft_printf("Total %d\n", print.nb_blocks);
 	elem = list_elem->first;
 	while (elem)
 	{
 		if (ls_lenlist(list_elem) > 1)
 		{
 			ft_printf("%s%c %*d %-*s  %-*s  %*s %s %s%s\x1b[0m",
-			          elem->right, elem->additional_right, max_nblink,
-			          elem->nb_link, max_owner, elem->owner, max_group,
-			          elem->group, max_size, elem->size, elem->ltime,
-				      elem->color, elem->name);
+						elem->right, elem->additional_right, print.sp_nblink,
+						elem->nb_link, print.sp_owner, elem->owner,
+						print.sp_group, elem->group, print.sp_size, elem->size,
+						elem->ltime, elem->color, elem->name);
 			if (elem->link)
 				ft_printf(" -> %s\n", elem->link);
 			else
@@ -131,17 +122,19 @@ void		ls_print(t_lsfields *opts, t_lslist *list_elem, BOOL fldr)
 {
 	t_lsprint	print;
 
+	ft_bzero(&print, sizeof(t_lsprint));
 	if (fldr)
 		ls_fldr(opts, list_elem);
 	else if (ls_lenlist(list_elem) > 0 && opts->l)
 	{
 		opts->bgn_print = 1;
-		ls_printlong(opts, list_elem);
+		print = ls_spacelong(list_elem, print);
+		ls_printlong(list_elem, print);
 	}
 	else if (ls_lenlist(list_elem) > 0)
 	{
 		opts->bgn_print = 1;
-		print = ls_columns(*opts, list_elem);
+		print = ls_columns(list_elem);
 		ls_printclmn(list_elem, print);
 	}
 	if (opts->r_upr && !fldr)

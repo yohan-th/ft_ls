@@ -13,7 +13,7 @@
 
 .PHONY: all clean fclean re
 
-CFLAGS = -c -Wall -Wextra -Werror
+CFLAGS = -c -o2 -Wall -Wextra -Werror
 
 NAME = ft_ls
 
@@ -29,6 +29,8 @@ SRCS = 	ls_fillelem.c \
         ls_clmn.c \
         main.c
 
+INCLUDES_FILE = ft_ls.h
+
 OBJS = $(addprefix $(DIR_OBJ)/,$(SRCS:.c=.o))
 
 all: $(NAME)
@@ -37,9 +39,9 @@ $(NAME): $(OBJS)
 		@make -C $(DIR_LIB)
 		@gcc -o $(NAME) $(OBJS) -L $(DIR_LIB) -lft
 
-$(DIR_OBJ)/%.o: $(DIR_SRC)/%.c
+$(DIR_OBJ)/%.o: $(DIR_SRC)/%.c  $(DIR_INC)/$(INCLUDES_FILE)
 		@mkdir -p $(DIR_OBJ)
-		@gcc -o $@ -c $< -I $(DIR_INC)
+		gcc -o $@ -c $< -I $(DIR_INC)
 
 clean:
 		@rm -rf $(DIR_OBJ)

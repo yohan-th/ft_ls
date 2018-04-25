@@ -98,7 +98,7 @@ void		ls_elempos(t_lslist *list_elem, t_lsprint print)
 ** {ls_calcclmn} recalculera ces valeurs
 */
 
-t_lsprint	ls_columns(t_lsfields opts, t_lslist *list_elem)
+t_lsprint	ls_columns(t_lslist *list_elem)
 {
 	t_lsprint print;
 

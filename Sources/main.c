@@ -13,17 +13,21 @@
 
 #include "../Include/ft_ls.h"
 
-void		ls_error(char c)
+void		ls_error(intmax_t c)
 {
-	if (c < 0)
-		ft_printf("--> Error code %d\n", c);
-	else
+	t_stat		s;
+
+	if (lstat((char *)c, &s) == -1)
+		ft_printf("ft_ls: %s: No such file or directory\n", (char *)c);
+	else if (ft_strchr("lRartG", (char)c))
 		ft_printf("ft_ls: illegal option -- %c\n"
-			"usage: ls [-GRalrt] [file ...]\n", c);
+			"usage: ls [-GRalrt] [file ...]\n", (char)c);
+	else
+		ft_printf("ft_ls: Malloc fail\n");
 	exit(0);
 }
 
-void 	ls_checkarg(char *av, t_lsfields *arg)
+void		ls_checkarg(char *av, t_lsfields *arg)
 {
 	while (*(++av))
 	{
@@ -40,7 +44,7 @@ void 	ls_checkarg(char *av, t_lsfields *arg)
 		else if (*av == 'G')
 			arg->g = 1;
 		else
-			ls_error(*av);
+			ls_error((intmax_t)*av);
 	}
 }
 
@@ -57,10 +61,10 @@ t_lsfields	ls_parse(int ac, char ***av)
 	return (arg);
 }
 
-int 		main(int ac, char **av)
+int			main(int ac, char **av)
 {
 	t_lsfields	opts;
-	t_lslist *list_file;
+	t_lslist	*list_file;
 	t_lslist	*list_fldr;
 
 	av++;
@@ -76,7 +80,11 @@ int 		main(int ac, char **av)
 	}
 	if (list_file->first)
 		ls_print(&opts, list_file, 0);
+	else
+		free(list_file);
 	if (list_fldr->first)
 		ls_print(&opts, list_fldr, 1);
-    return (1);
+	else
+		free(list_fldr);
+	return (1);
 }

@@ -24,10 +24,10 @@ t_lslist	*ls_initlist(void)
 	return (list);
 }
 
-int 		ls_lenlist(t_lslist *list)
+int			ls_lenlist(t_lslist *list)
 {
 	t_lselem	*elem;
-	int 		nb_elem;
+	int			nb_elem;
 
 	nb_elem = 0;
 	elem = list->first;
@@ -38,6 +38,10 @@ int 		ls_lenlist(t_lslist *list)
 	}
 	return (nb_elem);
 }
+
+/*
+** ltime avait été tronqué à +4 donc on revient au debut pour free
+*/
 
 void		ls_freelist(t_lslist *list)
 {
@@ -50,19 +54,25 @@ void		ls_freelist(t_lslist *list)
 			free(elem->prev);
 		if (elem->path)
 			free(elem->path);
+		free(elem->ltime - 4);
+		free(elem->right);
+		free(elem->size);
+		free(elem->owner);
+		free(elem->group);
 		if (!elem->next)
 		{
 			free(elem);
-			break;
+			break ;
 		}
+		if (elem->link)
+			free(elem->link);
 		elem = elem->next;
 	}
 	free(list);
 }
 
-int		ls_cmp(t_lsfields *opts, t_lselem *elem1, t_lselem *elem2)
+int			ls_cmp(t_lsfields *opts, t_lselem *elem1, t_lselem *elem2)
 {
-	//ft_printf("on compare elem1 %s et  %s elem2\n", elem1->name, elem2->name);
 	if (opts->t && elem1->time > elem2->time)
 		return (1);
 	else if (opts->r_lwr && ft_strcmp(elem1->path, elem2->path) >= 0)
@@ -73,12 +83,11 @@ int		ls_cmp(t_lsfields *opts, t_lselem *elem1, t_lselem *elem2)
 		return (0);
 }
 
-void	ls_insert(t_lselem *elem, t_lslist *list, t_lsfields *opts)
+void		ls_insert(t_lselem *elem, t_lslist *list, t_lsfields *opts)
 {
 	t_lselem *t_prev;
 	t_lselem *t_next;
 
-	//ft_printf("new elem %s\n", elem->color);
 	t_prev = NULL;
 	t_next = list->first;
 	while (t_next && ls_cmp(opts, t_next, elem))

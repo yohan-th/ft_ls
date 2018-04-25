@@ -15,15 +15,15 @@
 
 void		ls_explore(t_lsfields *opts, t_lslist *list_elem)
 {
-	t_lselem	*elem;
-	t_lslist	*list_file;
-	DIR 		*rep;
+	t_lselem		*elem;
+	t_lslist		*list_file;
+	DIR				*rep;
 
 	elem = list_elem->first;
 	while (elem)
 	{
-		if (ft_strcmp(elem->name, ".") && ft_strcmp(elem->name, "..")
-		    && (rep = opendir(elem->path)))
+		if (ft_strcmp(elem->name, ".") && ft_strcmp(elem->name, "..") &&
+				(rep = opendir(elem->path)))
 		{
 			if (opts->bgn_print)
 				write(1, "\n", 1);
@@ -41,7 +41,7 @@ void		ls_explore(t_lsfields *opts, t_lslist *list_elem)
 ** Le strdup dans fillinfo permet de free la liste chainé
 */
 
-void	ls_listfile(char *name, t_lslist *list_file, t_lsfields *opts)
+void		ls_listfile(char *name, t_lslist *list_file, t_lsfields *opts)
 {
 	t_lselem	*file_info;
 
@@ -51,18 +51,17 @@ void	ls_listfile(char *name, t_lslist *list_file, t_lsfields *opts)
 	ls_insert(file_info, list_file, opts);
 }
 
-void	ls_listfolder(char *name, t_lslist *list_fldr, t_lsfields *opts)
+void		ls_listfolder(char *name, t_lslist *list_fldr, t_lsfields *opts)
 {
 	t_lselem	*fldr_info;
 
-	opts->nb_folders += 1;
 	fldr_info = ls_fillelem(ft_strdup(name));
 	if (!opts->g)
 		fldr_info->color = "\033[m";
 	ls_insert(fldr_info, list_fldr, opts);
 }
 
-void	ls_readdir(t_lsfields opts, char *name, t_lslist *list_file)
+void		ls_readdir(t_lsfields opts, char *name, t_lslist *list_file)
 {
 	DIR			*rep;
 	t_dirent	*files;
@@ -88,14 +87,14 @@ void	ls_readdir(t_lsfields opts, char *name, t_lslist *list_file)
 	}
 }
 
-void	ls_getinfo(t_lsfields *opts, char *elmt, t_lslist *list_file,
-				   t_lslist *list_fldr)
+void		ls_getinfo(t_lsfields *opts, char *elmt, t_lslist *list_file,
+					t_lslist *list_fldr)
 {
 	t_stat statbuf;
 
 	if (ft_strcmp(elmt, ".") == 0)
 		ls_readdir(*opts, ".", list_file);
-	else if (stat(elmt, &statbuf) != 0 && S_ISDIR(statbuf.st_mode))
+	else if (stat(elmt, &statbuf) == 0 && S_ISDIR(statbuf.st_mode) == 1)
 		ls_listfolder(elmt, list_fldr, opts);
 	else
 		ls_listfile(elmt, list_file, opts);

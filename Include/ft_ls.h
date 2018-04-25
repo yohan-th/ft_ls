@@ -28,81 +28,88 @@
 
 # include "../Libft/Includes/libft.h"
 
-typedef struct stat	t_stat;
-typedef struct dirent	t_dirent;
-typedef struct winsize	t_winsize;
+typedef struct stat		t_stat;
+typedef struct dirent		t_dirent;
+typedef struct winsize		t_winsize;
 
-typedef struct	s_lsfields
+typedef struct				s_lsfields
 {
 	BOOL	r_upr;
 	BOOL	a;
 	BOOL	l;
 	BOOL	r_lwr;
 	BOOL	t;
-	BOOL    g;
-	int		nb_folders;
-	int 	nb_files;
+	BOOL	g;
 	BOOL	bgn_print;
-}				t_lsfields;
+}							t_lsfields;
+
+typedef struct				s_lslist
+{
+	struct s_lselem		*first;
+	struct s_lselem		*last;
+}							t_lslist;
 
 /*
 ** size est une chaine de caractere de chiffre car contiendra
 */
 
-typedef struct  s_lselem
+typedef struct				s_lselem
 {
-	int				time;
-	char 			*ltime;
-	char			*name;
-	char 			*path;
-	char 			*color;
-	char 			*right;
-	char            additional_right;
-	int 			nb_link;
-	char			*owner;
-	char 			*group;
-	char 			*link;
-	char 			*size;
-	int             major;
-	int             minor;
-	int 			pos_clmn;
-	int 			sp_clmn;
-	struct s_lselem *next;
-	struct s_lselem *prev;
-}				t_lselem;
+	int					time;
+	char				*ltime;
+	char				*name;
+	char				*path;
+	char				*color;
+	char				*right;
+	char				additional_right;
+	int					nb_link;
+	char				*owner;
+	char				*group;
+	char				*link;
+	char				*size;
+	int					major;
+	int					minor;
+	int					st_blocks;
+	int					pos_clmn;
+	int					sp_clmn;
+	struct s_lselem		*next;
+	struct s_lselem		*prev;
+}							t_lselem;
 
-typedef struct	s_lslist
+typedef struct				s_lsprint
 {
-	t_lselem *first;
-	t_lselem *last;
-}				t_lslist;
+	int	w_term;
+	int	w_clmn;
+	int	nb_file;
+	int	nb_clmn;
+	int	nb_line;
+	int	sp_nblink;
+	int	sp_size;
+	int	sp_owner;
+	int	sp_group;
+	int	nb_blocks;
+}							t_lsprint;
 
-typedef struct s_lsprint
-{
-	int w_term;
-	int w_clmn;
-	int nb_file;
-	int nb_clmn;
-	int nb_line;
-}				t_lsprint;
-
-//n i d C
-
-t_lselem		*ls_fillelem(char *elmt);
-int				ls_list_dir(char *folder, BOOL all);
-void			ls_insert(t_lselem *elem, t_lslist *list, t_lsfields *opts);
-void			ls_getinfo(t_lsfields *opts, char *elmt, t_lslist *list_file, t_lslist *list_fldr);
-void			ls_readdir(t_lsfields opts, char *name, t_lslist *list_file);
-void			ls_print(t_lsfields *opts, t_lslist *list_elem, BOOL fldr);
-t_lsprint		ls_columns(t_lsfields opts, t_lslist *list_elem);
-void		    ls_explore(t_lsfields *opts, t_lslist *list_elem);
-
-// TOOLS
-void			ls_viewlist(t_lslist *list);
-t_lslist		*ls_initlist(void);
-int 			ls_lenlist(t_lslist *list);
-void			ls_error(char c);
-void			ls_freelist(t_lslist *list);
-int 			isDirectory(const char *path);
+t_lselem					*ls_fillelem(char *elmt);
+void						ls_insert(t_lselem *elem, t_lslist *list,
+									t_lsfields *opts);
+void						ls_getinfo(t_lsfields *opts, char *elmt,
+									t_lslist *list_file, t_lslist *list_fldr);
+void						ls_readdir(t_lsfields opts, char *name,
+									t_lslist *list_file);
+void						ls_print(t_lsfields *opts, t_lslist *list_elem,
+									BOOL fldr);
+t_lsprint					ls_columns(t_lslist *list_elem);
+void						ls_explore(t_lsfields *opts, t_lslist *list_elem);
+t_lslist					*ls_initlist(void);
+int							ls_lenlist(t_lslist *list);
+void						ls_error(intmax_t c);
+void						ls_freelist(t_lslist *list);
 
 #endif
+
+/*
+** Hard test
+** /Volumes/Mac OS/Volumes/Storage/cache/ythollet/Library/Logs/DiagnosticReports
+** /private/var/db/mds/messages
+*/
