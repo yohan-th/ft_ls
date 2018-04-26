@@ -75,9 +75,7 @@ int			ls_cmp(t_lsfields *opts, t_lselem *elem1, t_lselem *elem2)
 {
 	if (opts->t && elem1->time > elem2->time)
 		return (1);
-	else if (opts->r_lwr && ft_strcmp(elem1->path, elem2->path) >= 0)
-		return (1);
-	else if (!opts->r_lwr && ft_strcmp(elem1->path, elem2->path) <= 0)
+	else if (!opts->t && ft_strcmp(elem1->path, elem2->path) <= 0)
 		return (1);
 	else
 		return (0);

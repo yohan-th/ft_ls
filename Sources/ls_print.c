@@ -98,11 +98,12 @@ void		ls_printlong(t_lslist *list_elem, t_lsprint print)
 {
 	t_lselem	*elem;
 
-	ft_printf("Total %d\n", print.nb_blocks);
+	if (ls_lenlist(list_elem) > 1)
+		ft_printf("total %d\n", print.nb_blocks);
 	elem = list_elem->first;
 	while (elem)
 	{
-		if (ls_lenlist(list_elem) > 1)
+		if (ls_lenlist(list_elem) >= 1)
 		{
 			ft_printf("%s%c %*d %-*s  %-*s  %*s %s %s%s\x1b[0m",
 						elem->right, elem->additional_right, print.sp_nblink,
@@ -123,6 +124,8 @@ void		ls_print(t_lsfields *opts, t_lslist *list_elem, BOOL fldr)
 	t_lsprint	print;
 
 	ft_bzero(&print, sizeof(t_lsprint));
+	if (opts->r_lwr)
+		ls_revlist(list_elem);
 	if (fldr)
 		ls_fldr(opts, list_elem);
 	else if (ls_lenlist(list_elem) > 0 && opts->l)

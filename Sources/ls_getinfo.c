@@ -17,13 +17,12 @@ void		ls_explore(t_lsfields *opts, t_lslist *list_elem)
 {
 	t_lselem		*elem;
 	t_lslist		*list_file;
-	DIR				*rep;
 
 	elem = list_elem->first;
 	while (elem)
 	{
 		if (ft_strcmp(elem->name, ".") && ft_strcmp(elem->name, "..") &&
-				(rep = opendir(elem->path)))
+				((elem->right)[0] == 'd'))
 		{
 			if (opts->bgn_print)
 				write(1, "\n", 1);
@@ -31,7 +30,6 @@ void		ls_explore(t_lsfields *opts, t_lslist *list_elem)
 			list_file = ls_initlist();
 			ls_readdir(*opts, elem->path, list_file);
 			ls_print(opts, list_file, 0);
-			closedir(rep);
 		}
 		elem = elem->next;
 	}

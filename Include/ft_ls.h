@@ -103,8 +103,9 @@ t_lsprint					ls_columns(t_lslist *list_elem);
 void						ls_explore(t_lsfields *opts, t_lslist *list_elem);
 t_lslist					*ls_initlist(void);
 int							ls_lenlist(t_lslist *list);
-void						ls_error(intmax_t c);
+void						ls_error(int type, intmax_t c);
 void						ls_freelist(t_lslist *list);
+void						ls_revlist(t_lslist *list);
 
 #endif
 
@@ -112,4 +113,5 @@ void						ls_freelist(t_lslist *list);
 ** Hard test
 ** /Volumes/Mac OS/Volumes/Storage/cache/ythollet/Library/Logs/DiagnosticReports
 ** /private/var/db/mds/messages
+** file & folder no right
 */

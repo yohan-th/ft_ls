@@ -13,15 +13,38 @@
 
 #include "../Include/ft_ls.h"
 
-void		ls_error(intmax_t c)
-{
-	t_stat		s;
+/*
+** On inverse uniquement le pointeur du suivant avec le precedent
+** ainsi que le pointeur vers le premier avec le dernier
+** Note : revlist n'a rien a faire dans main.c mais pour respect
+** de la norme on ne peut le placer dans list.c
+*/
 
-	if (lstat((char *)c, &s) == -1)
-		ft_printf("ft_ls: %s: No such file or directory\n", (char *)c);
-	else if (ft_strchr("lRartG", (char)c))
+void		ls_revlist(t_lslist *list)
+{
+	t_lselem	*t_next;
+	t_lselem	*tmp;
+
+	t_next = list->first;
+	while (t_next)
+	{
+		tmp = t_next->next;
+		t_next->next = t_next->prev;
+		t_next->prev = tmp;
+		t_next = t_next->prev;
+	}
+	tmp = list->first;
+	list->first = list->last;
+	list->last = tmp;
+}
+
+void		ls_error(int type, intmax_t c)
+{
+	if (type == 1)
 		ft_printf("ft_ls: illegal option -- %c\n"
 			"usage: ls [-GRalrt] [file ...]\n", (char)c);
+	else if (type == 2)
+		ft_printf("ft_ls: %s: No such file or directory\n", (char *)c);
 	else
 		ft_printf("ft_ls: Malloc fail\n");
 	exit(0);
@@ -44,7 +67,7 @@ void		ls_checkarg(char *av, t_lsfields *arg)
 		else if (*av == 'G')
 			arg->g = 1;
 		else
-			ls_error((intmax_t)*av);
+			ls_error(1, (intmax_t)*av);
 	}
 }
 
@@ -53,8 +76,13 @@ t_lsfields	ls_parse(int ac, char ***av)
 	t_lsfields arg;
 
 	ft_bzero(&arg, sizeof(t_lsfields));
-	while (ac > 1 && **av && (*av)[0][0] == '-')
+	while (ac > 1 && **av && (**av)[0] == '-')
 	{
+		if (ft_strlen(**av) >= 2 && (**av)[1] == '-')
+		{
+			(*av)++;
+			break ;
+		}
 		ls_checkarg(**av, &arg);
 		(*av)++;
 	}
@@ -83,7 +111,10 @@ int			main(int ac, char **av)
 	else
 		free(list_file);
 	if (list_fldr->first)
+	{
+		printf("folder\n");
 		ls_print(&opts, list_fldr, 1);
+	}
 	else
 		free(list_fldr);
 	return (1);

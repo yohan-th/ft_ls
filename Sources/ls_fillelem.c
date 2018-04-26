@@ -91,12 +91,12 @@ char		ls_additional_right(char *path)
 ** puis on ajoute +4 à time pour avancer et tronquer "Mon "
 */
 
-char		*ls_time(t_stat s)
+char        *ls_time(t_stat s)
 {
 	char *ltime;
 
 	ltime = ft_strdup(ctime(&s.st_mtime));
-	if (s.st_mtime < (time(NULL) - 60 * 60 * 24 * 30 * 6))
+	if (s.st_mtime < (time(NULL) - 60*60*24*30*6))
 	{
 		ltime[11] = ' ';
 		ltime[12] = ltime[20];
@@ -107,8 +107,9 @@ char		*ls_time(t_stat s)
 	}
 	else
 		ltime[16] = '\0';
-	return (ltime + 4);
+	return(ltime + 4);
 }
+
 
 /*
 ** {infos->size} est un char* car {major + "," + minor} remplacera {s.st_size}
@@ -121,7 +122,7 @@ t_lselem	*ls_fillelem(char *elmt)
 	t_lselem	*infos;
 
 	if (!(infos = malloc(sizeof(t_lselem))) || (lstat(elmt, &s)) == -1)
-		ls_error((intmax_t)elmt);
+		ls_error(2, (intmax_t)elmt);
 	infos->path = elmt;
 	infos->name = ft_rmvpath(elmt);
 	infos->color = ls_def_typeorcolor(s.st_mode, "color");
