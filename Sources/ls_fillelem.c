@@ -6,7 +6,7 @@
 /*   By: ythollet <ythollet@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/03/28 17:03:09 by ythollet     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/28 17:03:09 by ythollet    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/05/03 22:16:09 by ythollet    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -124,6 +124,9 @@ char		*ls_time(t_stat s)
 /*
 ** {infos->size} est un char* car {major + "," + minor} remplacera {s.st_size}
 ** lors de ls_printlong
+** Les {infos->owner} & {group} sont protege si jamais un element n'en n'a pas.
+** /!\ realpath est une fonction interdite et en plus ne donne pas le bon path
+** car commence tout le temps a partir de la racine
 */
 
 t_lselem	*ls_fillelem(char *elmt)
