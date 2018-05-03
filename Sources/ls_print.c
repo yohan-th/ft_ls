@@ -55,7 +55,7 @@ void		ls_fldr(t_lsfields *opts, t_lslist *list_elem)
 	elem = list_elem->first;
 	while (elem)
 	{
-		if (ls_lenlist(list_elem) > 1)
+		if (ls_lenlist(list_elem) > 1 || opts->bgn_print)
 		{
 			if (opts->bgn_print)
 				write(1, "\n", 1);

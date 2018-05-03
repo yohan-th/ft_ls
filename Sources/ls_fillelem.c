@@ -13,6 +13,13 @@
 
 #include "../Include/ft_ls.h"
 
+/*
+** s -> device socket, file used for inter-process communication
+** c -> charactere device file
+** b -> block device file
+** p -> pipe file, used to connect the output of one process to another input
+*/
+
 char		*ls_def_typeorcolor(mode_t st_mode, char *def)
 {
 	if (S_ISFIFO(st_mode))
@@ -37,6 +44,10 @@ char		*ls_def_typeorcolor(mode_t st_mode, char *def)
 		return ("\033[1;36;40m");
 	return (NULL);
 }
+
+/*
+** tT -> sticky bit, garde l'exe du fichier dans la memeoire vive (+rapide)
+*/
 
 char		*ls_def_right(t_stat s)
 {
@@ -91,12 +102,12 @@ char		ls_additional_right(char *path)
 ** puis on ajoute +4 à time pour avancer et tronquer "Mon "
 */
 
-char        *ls_time(t_stat s)
+char		*ls_time(t_stat s)
 {
 	char *ltime;
 
 	ltime = ft_strdup(ctime(&s.st_mtime));
-	if (s.st_mtime < (time(NULL) - 60*60*24*30*6))
+	if (s.st_mtime < (time(NULL) - 60 * 60 * 24 * 30 * 6))
 	{
 		ltime[11] = ' ';
 		ltime[12] = ltime[20];
@@ -107,9 +118,8 @@ char        *ls_time(t_stat s)
 	}
 	else
 		ltime[16] = '\0';
-	return(ltime + 4);
+	return (ltime + 4);
 }
-
 
 /*
 ** {infos->size} est un char* car {major + "," + minor} remplacera {s.st_size}

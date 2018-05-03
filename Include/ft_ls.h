@@ -114,4 +114,5 @@ void						ls_revlist(t_lslist *list);
 ** /Volumes/Mac OS/Volumes/Storage/cache/ythollet/Library/Logs/DiagnosticReports
 ** /private/var/db/mds/messages
 ** file & folder no right
+** mkdir - && ./ft_ls -lG -
 */

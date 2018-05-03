@@ -111,10 +111,7 @@ int			main(int ac, char **av)
 	else
 		free(list_file);
 	if (list_fldr->first)
-	{
-		printf("folder\n");
 		ls_print(&opts, list_fldr, 1);
-	}
 	else
 		free(list_fldr);
 	return (1);
